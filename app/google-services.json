@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "323998509533",
+    "project_id": "diplomski-rad-b2150",
+    "storage_bucket": "diplomski-rad-b2150.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323998509533:android:37ae4400491cccfc272e34",
+        "android_client_info": {
+          "package_name": "com.example.arithmeticstresstest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323998509533-ln5n6m4lod5ba5nb4ue6b9f6l947ludr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg_XgoYpvAloosk_HpDQE3Xg39BfKWSFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323998509533-ln5n6m4lod5ba5nb4ue6b9f6l947ludr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
