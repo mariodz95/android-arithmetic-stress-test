@@ -33,10 +33,9 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun createAccount() {
-        Log.v("test", "kreiranje accounta")
         val email = binding.editTextEmailAddress.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
-        Log.v("test", "kreiranje $email")
+        val passwordConfirmation = binding.editTextPasswordConfirmation.text.toString().trim()
 
         if (email.isEmpty()) {
             binding.editTextEmailAddress.error = "Email is required"
@@ -65,11 +64,18 @@ class CreateAccountActivity : AppCompatActivity() {
             return
         }
 
+        if(password != passwordConfirmation){
+            binding.editTextPasswordConfirmation.error = "Your passwords must match"
+            binding.editTextPassword.requestFocus()
+            return
+        }
+
         mAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener {
-            Log.v("test", " TU TU  ${it.isSuccessful}")
             if (it.isSuccessful) {
-                Log.v("test", "uspjesno")
                 openHomeActivity()
+            }else{
+                binding.txtErrorMessage.text = "Account already exist!"
+                binding.txtErrorMessage.requestFocus()
             }
         }
     }

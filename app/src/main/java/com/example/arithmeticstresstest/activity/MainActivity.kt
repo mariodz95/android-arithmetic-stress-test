@@ -29,14 +29,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openSignInActivity()
-    {
+    private fun openSignInActivity() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)
     }
 
-    private fun openCreateActivityAccount()
-    {
+    private fun openCreateActivityAccount() {
         val intent = Intent(this, CreateAccountActivity::class.java)
         startActivity(intent)
     }
