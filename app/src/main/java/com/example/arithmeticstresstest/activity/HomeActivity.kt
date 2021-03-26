@@ -2,7 +2,10 @@ package com.example.arithmeticstresstest.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,7 +18,7 @@ import com.example.arithmeticstresstest.R
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class HomeActivity : AppCompatActivity(){
+class HomeActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -24,6 +27,8 @@ class HomeActivity : AppCompatActivity(){
         setContentView(R.layout.activity_home)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        toolbar.setOnMenuItemClickListener(this)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -58,6 +63,22 @@ class HomeActivity : AppCompatActivity(){
 
     private fun openSignInActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_settings -> {
+                openSettingsActivity()
+                return true
+            }
+        }
+        return false
+    }
+
+
+    private fun openSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
 }

@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.activity.ResultActivity
@@ -13,8 +14,9 @@ import com.example.arithmeticstresstest.activity.ui.home.HomeViewModel
 import com.example.arithmeticstresstest.databinding.FragmentHomeBinding
 import java.util.*
 
-private const val START_TIME_IN_MILLIS = 30000
-private const val START_NUMBER_TIME_IN_MILLIS = 10000
+
+private const val START_TIME_IN_MILLIS = 420000
+private const val START_NUMBER_TIME_IN_MILLIS = 7000
 
 class HomeFragment : Fragment() {
 
@@ -27,16 +29,19 @@ class HomeFragment : Fragment() {
     private lateinit var smallCountDownTimer: CountDownTimer
     private lateinit var generateNumberCountDownTime: CountDownTimer
 
+    private var numberTimeReset: Long = START_NUMBER_TIME_IN_MILLIS.toLong()
 
     private var points = 0
+    private var numberOfCalculations = 0
 
     var leftNumber: Int = (100..1000).random()
     var rightNumber: Int = (100..1000).random()
 
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -84,6 +89,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun startTestTimer() {
+        val prefs = this.activity?.getSharedPreferences(
+            "DURATION_TIME",
+            AppCompatActivity.MODE_PRIVATE
+        )
+        timeLeftInMillis = prefs?.getLong("duration", 180000)!!
+
+        val prefsNumberTime = this.activity?.getSharedPreferences(
+            "NUMBER_RESET_TIME",
+            AppCompatActivity.MODE_PRIVATE
+        )
+        timeLeftInMillisForNumber =
+            prefsNumberTime?.getLong("numberResetTime", 7000)!!
+        numberTimeReset = timeLeftInMillisForNumber
+
         countDownTimer = object: CountDownTimer(timeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillis = millisUntilFinished
@@ -106,14 +125,25 @@ class HomeFragment : Fragment() {
     private fun updateCountDownText(){
         val minutes : Int = (timeLeftInMillis.toInt() / 1000) / 60
         val seconds : Int = (timeLeftInMillis.toInt() / 1000) % 60
-        val timeLeftFormatted : String = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        val timeLeftFormatted : String = String.format(
+            Locale.getDefault(),
+            "%02d:%02d",
+            minutes,
+            seconds
+        )
         binding.txtTimer.text = timeLeftFormatted
     }
 
     private fun updateNumberCountDownText(){
         val minutes : Int = (timeLeftInMillisForNumber.toInt() / 1000) / 60
         val seconds : Int = (timeLeftInMillisForNumber.toInt() / 1000) % 60
-        val timeLeftFormatted : String = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        numberOfCalculations++
+        val timeLeftFormatted : String = String.format(
+            Locale.getDefault(),
+            "%02d:%02d",
+            minutes,
+            seconds
+        )
         binding.txtSmallTimer.text = timeLeftFormatted
     }
 
@@ -142,14 +172,11 @@ class HomeFragment : Fragment() {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillisForNumber = millisUntilFinished
                 updateNumberCountDownText()
-                if(millisUntilFinished < 1000 && timeLeftInMillis > 1000){
-                    timeLeftInMillisForNumber = 11000
+            }
+            override fun onFinish() {
+                    timeLeftInMillisForNumber = numberTimeReset
                     startNumberTimer()
                     generateNumbersEveryXSeconds()
-                }
-            }
-
-            override fun onFinish() {
             }
         }.start()
     }
@@ -157,6 +184,8 @@ class HomeFragment : Fragment() {
 
     private fun openResultActivity() {
         val intent = Intent(activity, ResultActivity::class.java)
+        intent.putExtra("TEST_RESULT", points)
+        intent.putExtra("NUMBER_OF_CALCULATIONS", numberOfCalculations)
         startActivity(intent)
     }
 

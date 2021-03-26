@@ -7,6 +7,17 @@
     tools:context=".fragment.HomeFragment">
 
     <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="371dp"
+        android:layout_height="39dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Get as many good answers as possible within the time limit, change test time intervals in settings!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
