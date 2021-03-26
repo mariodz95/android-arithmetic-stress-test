@@ -1,13 +1,14 @@
 package com.example.arithmeticstresstest.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.arithmeticstresstest.activity.ResultActivity
 import com.example.arithmeticstresstest.activity.ui.home.HomeViewModel
 import com.example.arithmeticstresstest.databinding.FragmentHomeBinding
 import java.util.*
@@ -22,7 +23,6 @@ class HomeFragment : Fragment() {
     private var timeLeftInMillis : Long= START_TIME_IN_MILLIS.toLong()
     private var timeLeftInMillisForNumber : Long= START_NUMBER_TIME_IN_MILLIS.toLong()
 
-    private var timerRunning: Boolean = false
     private lateinit var countDownTimer: CountDownTimer
     private lateinit var smallCountDownTimer: CountDownTimer
     private lateinit var generateNumberCountDownTime: CountDownTimer
@@ -52,21 +52,31 @@ class HomeFragment : Fragment() {
             var correctResult: Int = leftNumber - rightNumber
             var myResult = binding.editTxtAnswer.text.toString()
 
-            if(myResult == ""){
-                smallCountDownTimer.cancel()
-                generateNumberCountDownTime.cancel()
-                smallCountDownTimer.start()
-                generateNumberCountDownTime.start()
-                updateNumberCountDownText()
+            when {
+                myResult == "" -> {
+                    smallCountDownTimer.cancel()
+                    generateNumberCountDownTime.cancel()
+                    smallCountDownTimer.start()
+                    generateNumberCountDownTime.start()
+                    updateNumberCountDownText()
 
-            }else if(correctResult == myResult.toInt()){
-                points++
-                binding.editTxtAnswer.setText("")
-                smallCountDownTimer.cancel()
-                generateNumberCountDownTime.cancel()
-                smallCountDownTimer.start()
-                generateNumberCountDownTime.start()
-                updateNumberCountDownText()
+                }
+                correctResult == myResult.toInt() -> {
+                    points++
+                    binding.editTxtAnswer.setText("")
+                    smallCountDownTimer.cancel()
+                    generateNumberCountDownTime.cancel()
+                    smallCountDownTimer.start()
+                    generateNumberCountDownTime.start()
+                    updateNumberCountDownText()
+                }
+                else -> {
+                    smallCountDownTimer.cancel()
+                    generateNumberCountDownTime.cancel()
+                    smallCountDownTimer.start()
+                    generateNumberCountDownTime.start()
+                    updateNumberCountDownText()
+                }
             }
         }
 
@@ -82,10 +92,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFinish() {
-                timerRunning = false
+                openResultActivity()
             }
         }.start()
-        timerRunning = true
         binding.startTest.visibility = View.GONE
         binding.txtRightNumber.visibility = View.VISIBLE
         binding.txtLefNumber.visibility = View.VISIBLE
@@ -143,6 +152,12 @@ class HomeFragment : Fragment() {
             override fun onFinish() {
             }
         }.start()
+    }
+
+
+    private fun openResultActivity() {
+        val intent = Intent(activity, ResultActivity::class.java)
+        startActivity(intent)
     }
 
 }
