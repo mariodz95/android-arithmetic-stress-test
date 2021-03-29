@@ -2,10 +2,9 @@ package com.example.arithmeticstresstest.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 class HomeActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +48,12 @@ class HomeActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
             openSignInActivity()
             true
         }
+
+        mAuth = FirebaseAuth.getInstance();
+
+        val headerView  = navView.getHeaderView(0)
+        val email: TextView = headerView .findViewById(R.id.textView)
+        email.text = "${mAuth!!.currentUser.email}"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

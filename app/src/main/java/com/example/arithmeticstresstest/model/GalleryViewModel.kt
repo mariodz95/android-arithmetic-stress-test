@@ -1,4 +1,4 @@
-package com.example.arithmeticstresstest.activity.ui.gallery
+package com.example.arithmeticstresstest.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

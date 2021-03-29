@@ -1,4 +1,4 @@
-package com.example.arithmeticstresstest.activity.ui.slideshow
+package com.example.arithmeticstresstest.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.R
+import com.example.arithmeticstresstest.model.SlideshowViewModel
 
 class SlideshowFragment : Fragment() {
 

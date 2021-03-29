@@ -1,6 +1,7 @@
 package com.example.arithmeticstresstest.fragment
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -9,9 +10,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.arithmeticstresstest.R
+import com.example.arithmeticstresstest.activity.InsertDataActivity
 import com.example.arithmeticstresstest.activity.ResultActivity
-import com.example.arithmeticstresstest.activity.ui.home.HomeViewModel
 import com.example.arithmeticstresstest.databinding.FragmentHomeBinding
+import com.example.arithmeticstresstest.model.HomeViewModel
 import java.util.*
 
 
@@ -25,10 +28,11 @@ class HomeFragment : Fragment() {
     private var timeLeftInMillis : Long= START_TIME_IN_MILLIS.toLong()
     private var timeLeftInMillisForNumber : Long= START_NUMBER_TIME_IN_MILLIS.toLong()
 
-    private lateinit var countDownTimer: CountDownTimer
-    private lateinit var smallCountDownTimer: CountDownTimer
-    private lateinit var generateNumberCountDownTime: CountDownTimer
+    private var countDownTimer: CountDownTimer? = null
+    private var smallCountDownTimer: CountDownTimer? = null
+    private var generateNumberCountDownTime: CountDownTimer? = null
 
+    var soundFlag: Boolean = false
     private var numberTimeReset: Long = START_NUMBER_TIME_IN_MILLIS.toLong()
 
     private var points = 0
@@ -59,30 +63,34 @@ class HomeFragment : Fragment() {
 
             when {
                 myResult == "" -> {
-                    smallCountDownTimer.cancel()
-                    generateNumberCountDownTime.cancel()
-                    smallCountDownTimer.start()
-                    generateNumberCountDownTime.start()
+                    smallCountDownTimer?.cancel()
+                    generateNumberCountDownTime?.cancel()
+                    smallCountDownTimer?.start()
+                    generateNumberCountDownTime?.start()
                     updateNumberCountDownText()
 
                 }
                 correctResult == myResult.toInt() -> {
                     points++
                     binding.editTxtAnswer.setText("")
-                    smallCountDownTimer.cancel()
-                    generateNumberCountDownTime.cancel()
-                    smallCountDownTimer.start()
-                    generateNumberCountDownTime.start()
+                    smallCountDownTimer?.cancel()
+                    generateNumberCountDownTime?.cancel()
+                    smallCountDownTimer?.start()
+                    generateNumberCountDownTime?.start()
                     updateNumberCountDownText()
                 }
                 else -> {
-                    smallCountDownTimer.cancel()
-                    generateNumberCountDownTime.cancel()
-                    smallCountDownTimer.start()
-                    generateNumberCountDownTime.start()
+                    smallCountDownTimer?.cancel()
+                    generateNumberCountDownTime?.cancel()
+                    smallCountDownTimer?.start()
+                    generateNumberCountDownTime?.start()
                     updateNumberCountDownText()
                 }
             }
+        }
+
+        binding.fab.setOnClickListener{
+            openInsertDataActivity()
         }
 
         return binding.root
@@ -120,6 +128,7 @@ class HomeFragment : Fragment() {
         binding.txtSubtract.visibility = View.VISIBLE
         binding.editTxtAnswer.visibility = View.VISIBLE
         binding.btnSubmit.visibility = View.VISIBLE
+        binding.txtDescription.visibility = View.GONE
     }
 
     private fun updateCountDownText(){
@@ -150,6 +159,9 @@ class HomeFragment : Fragment() {
     private fun generateNumbersEveryXSeconds() {
         generateNumberCountDownTime = object: CountDownTimer(timeLeftInMillisForNumber, 10000) {
             override fun onTick(millisUntilFinished: Long) {
+                if(soundFlag) {
+                    sound()
+                }
                 val randomNumberOne = (100..1000).random()
                 val randomNumberTwo = (100..1000).random()
                 leftNumber = randomNumberOne
@@ -160,11 +172,17 @@ class HomeFragment : Fragment() {
                 }
                 binding.txtLefNumber.text = leftNumber.toString()
                 binding.txtRightNumber.text = rightNumber.toString()
+                soundFlag = true
             }
             override fun onFinish() {
 
             }
         }.start()
+    }
+
+    private fun sound(){
+        val wrongSound = MediaPlayer.create(activity, R.raw.wrong)
+        wrongSound.start()
     }
 
     private fun startNumberTimer() {
@@ -181,7 +199,6 @@ class HomeFragment : Fragment() {
         }.start()
     }
 
-
     private fun openResultActivity() {
         val intent = Intent(activity, ResultActivity::class.java)
         intent.putExtra("TEST_RESULT", points)
@@ -189,4 +206,8 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
+    private fun openInsertDataActivity() {
+        val intent = Intent(activity, InsertDataActivity::class.java)
+        startActivity(intent)
+    }
 }
