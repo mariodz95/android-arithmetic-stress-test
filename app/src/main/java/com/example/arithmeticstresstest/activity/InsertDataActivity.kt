@@ -68,7 +68,10 @@ class InsertDataActivity : AppCompatActivity() {
         }
 
         val currentTime: Date = Calendar.getInstance().time
-        val testData = TestData(glucoseLevel.toFloat(), heartRate, stressLevel, currentTime,"BeforeTest")
+
+        val type: String? = intent.getStringExtra("TYPE")
+
+        val testData = TestData(glucoseLevel.toFloat(), heartRate, stressLevel, currentTime, type!!)
         dataViewModel.insertBeforeOrAfterTest(testData, mAuth?.currentUser?.uid)
         openTestActivity()
     }

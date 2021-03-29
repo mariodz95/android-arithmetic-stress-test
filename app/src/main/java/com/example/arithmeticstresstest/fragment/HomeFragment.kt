@@ -9,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.R
 import com.example.arithmeticstresstest.activity.InsertDataActivity
 import com.example.arithmeticstresstest.activity.ResultActivity
 import com.example.arithmeticstresstest.databinding.FragmentHomeBinding
-import com.example.arithmeticstresstest.model.HomeViewModel
 import java.util.*
 
 
@@ -23,7 +21,6 @@ private const val START_NUMBER_TIME_IN_MILLIS = 7000
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private var timeLeftInMillis : Long= START_TIME_IN_MILLIS.toLong()
     private var timeLeftInMillisForNumber : Long= START_NUMBER_TIME_IN_MILLIS.toLong()
@@ -47,8 +44,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.startTest.setOnClickListener {
@@ -102,6 +97,7 @@ class HomeFragment : Fragment() {
             AppCompatActivity.MODE_PRIVATE
         )
         timeLeftInMillis = prefs?.getLong("duration", 180000)!!
+        timeLeftInMillis = 20000
 
         val prefsNumberTime = this.activity?.getSharedPreferences(
             "NUMBER_RESET_TIME",
@@ -146,7 +142,6 @@ class HomeFragment : Fragment() {
     private fun updateNumberCountDownText(){
         val minutes : Int = (timeLeftInMillisForNumber.toInt() / 1000) / 60
         val seconds : Int = (timeLeftInMillisForNumber.toInt() / 1000) % 60
-        numberOfCalculations++
         val timeLeftFormatted : String = String.format(
             Locale.getDefault(),
             "%02d:%02d",
@@ -159,6 +154,7 @@ class HomeFragment : Fragment() {
     private fun generateNumbersEveryXSeconds() {
         generateNumberCountDownTime = object: CountDownTimer(timeLeftInMillisForNumber, 10000) {
             override fun onTick(millisUntilFinished: Long) {
+                numberOfCalculations++
                 if(soundFlag) {
                     sound()
                 }
@@ -175,7 +171,6 @@ class HomeFragment : Fragment() {
                 soundFlag = true
             }
             override fun onFinish() {
-
             }
         }.start()
     }
@@ -189,7 +184,6 @@ class HomeFragment : Fragment() {
         smallCountDownTimer = object: CountDownTimer(timeLeftInMillisForNumber, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillisForNumber = millisUntilFinished
-                updateNumberCountDownText()
             }
             override fun onFinish() {
                     timeLeftInMillisForNumber = numberTimeReset
@@ -199,7 +193,19 @@ class HomeFragment : Fragment() {
         }.start()
     }
 
+    private fun stopTimers(){
+        countDownTimer?.cancel()
+        countDownTimer = null
+
+        smallCountDownTimer?.cancel()
+        smallCountDownTimer = null
+
+        generateNumberCountDownTime?.cancel()
+        generateNumberCountDownTime = null
+    }
+
     private fun openResultActivity() {
+        stopTimers()
         val intent = Intent(activity, ResultActivity::class.java)
         intent.putExtra("TEST_RESULT", points)
         intent.putExtra("NUMBER_OF_CALCULATIONS", numberOfCalculations)
@@ -207,7 +213,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun openInsertDataActivity() {
+        stopTimers()
         val intent = Intent(activity, InsertDataActivity::class.java)
+        intent.putExtra("TYPE", "BeforeTest")
         startActivity(intent)
     }
 }

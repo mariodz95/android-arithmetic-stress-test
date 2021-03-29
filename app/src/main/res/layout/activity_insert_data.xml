@@ -10,12 +10,13 @@
         android:id="@+id/editTxtGlucose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/edit_text_left_and_right_margin"
+        android:layout_marginTop="128dp"
+        android:layout_marginRight="@dimen/edit_text_left_and_right_margin"
         android:hint="Insert glucose level in mmol*"
         android:inputType="number"
-        android:layout_marginLeft="@dimen/edit_text_left_and_right_margin"
-        android:layout_marginRight="@dimen/edit_text_left_and_right_margin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,6 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextStressLevel" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextStressLevel"
+        app:layout_constraintVertical_bias="0.194" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
