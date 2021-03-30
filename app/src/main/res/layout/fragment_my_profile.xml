@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ProfileFragment">
+
+    <TextView
+        android:id="@+id/text_slideshow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Profile data:"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_goneMarginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="Name: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_slideshow" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/txtName"
+        app:layout_constraintTop_toBottomOf="@+id/text_slideshow" />
+
+    <TextView
+        android:id="@+id/txtLastName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last name: "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+
+    <EditText
+        android:id="@+id/editTestLastName"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/txtLastName"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+
+    <TextView
+        android:id="@+id/txtTypeOfDiabetes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type of diabetes: "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
+
+    <EditText
+        android:id="@+id/editTextTypeOfDiabetes"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/txtTypeOfDiabetes"
+        app:layout_constraintTop_toBottomOf="@+id/editTestLastName" />
+
+    <TextView
+        android:id="@+id/txtWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight: "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTypeOfDiabetes" />
+
+    <EditText
+        android:id="@+id/editTextWeight"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/txtWeight"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTypeOfDiabetes" />
+
+    <TextView
+        android:id="@+id/txtBirthOfDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date of birth: "
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtWeight" />
+
+    <EditText
+        android:id="@+id/editTextDateOfBirth"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        app:layout_constraintStart_toEndOf="@+id/txtBirthOfDate"
+        app:layout_constraintTop_toBottomOf="@+id/editTextWeight" />
+
+
+    <Button
+        android:id="@+id/btnUpdateProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

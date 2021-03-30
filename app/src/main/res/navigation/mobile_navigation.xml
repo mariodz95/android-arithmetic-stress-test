@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_my_data"
         android:name="com.example.arithmeticstresstest.fragment.MyDataFragment"
         android:label="@string/my_data"
         tools:layout="@layout/my_data" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.arithmeticstresstest.fragment.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_profile"
+        android:name="com.example.arithmeticstresstest.fragment.ProfileFragment"
+        android:label="@string/my_profile"
+        tools:layout="@layout/fragment_my_profile" />
 </navigation>

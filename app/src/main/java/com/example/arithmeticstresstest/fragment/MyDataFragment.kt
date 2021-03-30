@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import java.text.DateFormat
@@ -33,9 +32,9 @@ class MyDataFragment : Fragment() {
     private var mAuth: FirebaseAuth? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = MyDataBinding.inflate(inflater, container, false)
 
@@ -44,9 +43,10 @@ class MyDataFragment : Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        dataViewModel.getAllBeforeAndAfterTestResults(mAuth?.currentUser?.uid)
+        dataViewModel.getAllTestData(mAuth?.currentUser?.uid)
 
         dataViewModel.data?.observe(viewLifecycleOwner, Observer {
+            Log.v("sada", "IT data: $it")
 
             val entriesBeforeTest: ArrayList<BarEntry> = ArrayList()
             val entriesAfterTest: ArrayList<BarEntry> = ArrayList()
@@ -54,48 +54,65 @@ class MyDataFragment : Fragment() {
             val date = ArrayList<String>()
 
             var i: Int = 0
-            for (item in it){
-                if(item.type == "BeforeTest") {
-                    val barEntry = BarEntry(i.toFloat(), item.glucoseLevel!!.toFloat())
-                    val test = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(item.date)
-                    Log.v("sada", "kako izgleda $test")
-                    date.add(test)
-                    entriesBeforeTest.add(barEntry)
-                    i++
-                }/*else{
-                    val barEntry = BarEntry(i.toFloat(), item.glucoseLevel!!.toFloat())
-                    date.add(item.date.toString())
-                    entriesAfterTest.add(barEntry)
-                    i++
-                }*/
+            for (item in it) {
+                var glucoseBefore: Float = 0f
+                if (item.glucoseLevelBeforeTest != null) {
+                    glucoseBefore = item.glucoseLevelBeforeTest!!.toFloat()
+                }
+                val barEntryBefore = BarEntry(i.toFloat(), glucoseBefore)
+                entriesBeforeTest.add(barEntryBefore)
+
+                var glucoseAfter: Float = 0f
+                if (item.glucoseLevelAfterTest != null) {
+                    glucoseAfter = item.glucoseLevelAfterTest!!.toFloat()
+                }
+                val barEntryAfter = BarEntry((i).toFloat(), glucoseAfter)
+                entriesAfterTest.add(barEntryAfter)
+
+                val dateData =
+                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
+                        item.insertedDate
+                    )
+                date.add(dateData)
+
+                i++
             }
 
-            val barDataSetBeforeTest = BarDataSet(entriesBeforeTest, "Glucose level glucose level before test")
+            val barDataSetBeforeTest = BarDataSet(
+                entriesBeforeTest,
+                "Glucose levelbefore test"
+            )
             barDataSetBeforeTest.color = Color.BLUE
+
             val barDataSetAfterTest = BarDataSet(entriesAfterTest, "Glucose level after test")
             barDataSetAfterTest.color = Color.RED
 
-            val data = BarData( barDataSetBeforeTest, barDataSetAfterTest)
+            val data = BarData(barDataSetBeforeTest, barDataSetAfterTest)
             binding.barchart.data = data
 
-            val xAxis = binding.barchart.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM;
-            xAxis.setDrawAxisLine(true);
-            xAxis.setDrawGridLines(false);
-            xAxis.setDrawLabels(true);
-            xAxis.labelCount = date.size // important
-            xAxis.setSpaceMax(0.5f) // optional
-            xAxis.setSpaceMin(0.5f) // optional
-            xAxis.valueFormatter = object : ValueFormatter() {
-                override
-                fun getFormattedValue(value: Float): String {
-                    // value is x as index
-                    return date[value.toInt()]
-                }
-            }
+            val xAxis: XAxis = binding.barchart.xAxis
+            xAxis.valueFormatter = IndexAxisValueFormatter(date)
+            binding.barchart.axisLeft.axisMinimum = 0F
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.granularity = 0.5F
+            xAxis.isGranularityEnabled = true
+
+
+            val barSpace = 0.02f
+            val groupSpace = 0.3f
+            val groupCount = date.size
+
+            data.barWidth = 0.15f
+            binding.barchart.xAxis.axisMinimum = 0f
+            binding.barchart.xAxis.axisMaximum = 0 + binding.barchart.barData.getGroupWidth(
+                groupSpace,
+                barSpace
+            ) * groupCount
+
+            binding.barchart.groupBars(0f, groupSpace, barSpace)
+            xAxis.setCenterAxisLabels(true)
 
             binding.barchart.invalidate()
-
         })
 
         return binding.root

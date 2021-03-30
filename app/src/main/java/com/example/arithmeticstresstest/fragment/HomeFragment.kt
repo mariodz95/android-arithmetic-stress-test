@@ -38,7 +38,6 @@ class HomeFragment : Fragment() {
     var leftNumber: Int = (100..1000).random()
     var rightNumber: Int = (100..1000).random()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,6 +54,7 @@ class HomeFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             var correctResult: Int = leftNumber - rightNumber
             var myResult = binding.editTxtAnswer.text.toString()
+            binding.editTxtAnswer.text.clear()
 
             when {
                 myResult == "" -> {
@@ -125,6 +125,7 @@ class HomeFragment : Fragment() {
         binding.editTxtAnswer.visibility = View.VISIBLE
         binding.btnSubmit.visibility = View.VISIBLE
         binding.txtDescription.visibility = View.GONE
+        binding.fab.visibility = View.GONE
     }
 
     private fun updateCountDownText(){
@@ -168,6 +169,7 @@ class HomeFragment : Fragment() {
                 }
                 binding.txtLefNumber.text = leftNumber.toString()
                 binding.txtRightNumber.text = rightNumber.toString()
+                binding.editTxtAnswer.text.clear()
                 soundFlag = true
             }
             override fun onFinish() {
