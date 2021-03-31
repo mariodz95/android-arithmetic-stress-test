@@ -11,8 +11,15 @@ class DataViewModel(private val repository: FirebaseRepository): ViewModel(){
         repository.insertTestData(testData, uid)
     }
 
-    fun getAllTestData(uid: String?) : MutableLiveData<List<TestData>>?{
+    fun getAllTestData(uid: String?){
         data = repository.getAllTestData(uid)
-        return data
+    }
+
+    fun insertGlucoseLevel(userId: String?, glucoseLevel: GlucoseLevel){
+        repository.insertGlucoseLevel(userId, glucoseLevel)
+    }
+
+    fun insertSmartDeviceData(userId: String?, smartDevice: SmartDevice){
+        repository.insertSmartDeviceData(userId, smartDevice)
     }
 }

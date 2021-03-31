@@ -25,4 +25,10 @@
         <item>Medium</item>
         <item>High</item>
     </string-array>
+
+    <string-array name="type">
+        <item>Chose</item>
+        <item>Before meal</item>
+        <item>After meal</item>
+    </string-array>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.arithmeticstresstest.fragment
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.arithmeticstresstest.activity.GlucoseFormActivity
+import com.example.arithmeticstresstest.activity.ResultActivity
+import com.example.arithmeticstresstest.activity.SignInActivity
+import com.example.arithmeticstresstest.activity.SmartDeviceFormActivity
 import com.example.arithmeticstresstest.databinding.MyDataBinding
 import com.example.arithmeticstresstest.model.DataViewModel
 import com.example.arithmeticstresstest.model.DataViewModelFactory
@@ -45,9 +50,15 @@ class MyDataFragment : Fragment() {
 
         dataViewModel.getAllTestData(mAuth?.currentUser?.uid)
 
-        dataViewModel.data?.observe(viewLifecycleOwner, Observer {
-            Log.v("sada", "IT data: $it")
+        binding.btnInsertGlucose.setOnClickListener{
+            insertGlucose()
+        }
 
+        binding.btnInsertSmartDeviceData.setOnClickListener{
+            insertSmartData()
+        }
+
+        dataViewModel.data?.observe(viewLifecycleOwner, Observer {
             val entriesBeforeTest: ArrayList<BarEntry> = ArrayList()
             val entriesAfterTest: ArrayList<BarEntry> = ArrayList()
 
@@ -96,7 +107,7 @@ class MyDataFragment : Fragment() {
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 0.5F
             xAxis.isGranularityEnabled = true
-
+            xAxis.labelRotationAngle = 45f
 
             val barSpace = 0.02f
             val groupSpace = 0.3f
@@ -116,5 +127,15 @@ class MyDataFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    private fun insertGlucose(){
+        val intent = Intent(activity, GlucoseFormActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun insertSmartData(){
+        val intent = Intent(activity, SmartDeviceFormActivity::class.java)
+        startActivity(intent)
     }
 }

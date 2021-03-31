@@ -2,11 +2,15 @@ package com.example.arithmeticstresstest.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.arithmeticstresstest.model.GlucoseLevel
 import com.example.arithmeticstresstest.model.ProfileData
+import com.example.arithmeticstresstest.model.SmartDevice
 import com.example.arithmeticstresstest.model.TestData
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 class FirebaseRepository {
@@ -56,5 +60,15 @@ class FirebaseRepository {
                 Log.w("sada", "Error getting documents: ", exception)
             }
         return  profileData
+    }
+
+    fun insertGlucoseLevel(userId: String?, glucoseLevel: GlucoseLevel){
+        val db = Firebase.firestore
+        db.collection("glucoseLevels").document(userId!!).collection("levels").add(glucoseLevel)
+    }
+
+    fun insertSmartDeviceData(userId: String?, smartDevice: SmartDevice){
+        val db = Firebase.firestore
+        db.collection("smartDevice").document(userId!!).collection("data").add(smartDevice)
     }
 }

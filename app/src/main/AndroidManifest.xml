@@ -10,6 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ArithmeticStressTest">
+        <activity android:name=".activity.SmartDeviceFormActivity"></activity>
+        <activity android:name=".activity.GlucoseFormActivity" />
         <activity android:name=".activity.InsertDataActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ResultActivity" />
