@@ -3,7 +3,6 @@ package com.example.arithmeticstresstest.fragment
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import com.example.arithmeticstresstest.activity.GlucoseFormActivity
 import com.example.arithmeticstresstest.activity.ResultActivity
 import com.example.arithmeticstresstest.activity.SignInActivity
 import com.example.arithmeticstresstest.activity.SmartDeviceFormActivity
+import com.example.arithmeticstresstest.adapter.MyAdapter
 import com.example.arithmeticstresstest.databinding.MyDataBinding
 import com.example.arithmeticstresstest.model.DataViewModel
 import com.example.arithmeticstresstest.model.DataViewModelFactory
@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import java.text.DateFormat
@@ -43,13 +44,6 @@ class MyDataFragment : Fragment() {
     ): View? {
         binding = MyDataBinding.inflate(inflater, container, false)
 
-        var factory = DataViewModelFactory(repository)
-        dataViewModel = ViewModelProvider(this, factory)[DataViewModel::class.java]
-
-        mAuth = FirebaseAuth.getInstance()
-
-        dataViewModel.getAllTestData(mAuth?.currentUser?.uid)
-
         binding.btnInsertGlucose.setOnClickListener{
             insertGlucose()
         }
@@ -58,73 +52,27 @@ class MyDataFragment : Fragment() {
             insertSmartData()
         }
 
-        dataViewModel.data?.observe(viewLifecycleOwner, Observer {
-            val entriesBeforeTest: ArrayList<BarEntry> = ArrayList()
-            val entriesAfterTest: ArrayList<BarEntry> = ArrayList()
+        binding.tabLayout!!.addTab(binding.tabLayout!!.newTab())
+        binding.tabLayout!!.addTab(binding.tabLayout!!.newTab())
+        binding.tabLayout!!.addTab( binding.tabLayout!!.newTab())
+        binding.tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
-            val date = ArrayList<String>()
+        val adapter = MyAdapter(this, requireFragmentManager(),  binding.tabLayout!!.tabCount)
+        binding.pager!!.adapter = adapter
 
-            var i: Int = 0
-            for (item in it) {
-                var glucoseBefore: Float = 0f
-                if (item.glucoseLevelBeforeTest != null) {
-                    glucoseBefore = item.glucoseLevelBeforeTest!!.toFloat()
-                }
-                val barEntryBefore = BarEntry(i.toFloat(), glucoseBefore)
-                entriesBeforeTest.add(barEntryBefore)
+        binding.pager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout))
 
-                var glucoseAfter: Float = 0f
-                if (item.glucoseLevelAfterTest != null) {
-                    glucoseAfter = item.glucoseLevelAfterTest!!.toFloat()
-                }
-                val barEntryAfter = BarEntry((i).toFloat(), glucoseAfter)
-                entriesAfterTest.add(barEntryAfter)
-
-                val dateData =
-                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
-                        item.insertedDate
-                    )
-                date.add(dateData)
-
-                i++
+        binding.tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                binding.pager!!.currentItem = tab.position
             }
+            override fun onTabUnselected(tab: TabLayout.Tab) {
 
-            val barDataSetBeforeTest = BarDataSet(
-                entriesBeforeTest,
-                "Glucose levelbefore test"
-            )
-            barDataSetBeforeTest.color = Color.BLUE
-
-            val barDataSetAfterTest = BarDataSet(entriesAfterTest, "Glucose level after test")
-            barDataSetAfterTest.color = Color.RED
-
-            val data = BarData(barDataSetBeforeTest, barDataSetAfterTest)
-            binding.barchart.data = data
-
-            val xAxis: XAxis = binding.barchart.xAxis
-            xAxis.valueFormatter = IndexAxisValueFormatter(date)
-            binding.barchart.axisLeft.axisMinimum = 0F
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.granularity = 0.5F
-            xAxis.isGranularityEnabled = true
-            xAxis.labelRotationAngle = 45f
-
-            val barSpace = 0.02f
-            val groupSpace = 0.3f
-            val groupCount = date.size
-
-            data.barWidth = 0.15f
-            binding.barchart.xAxis.axisMinimum = 0f
-            binding.barchart.xAxis.axisMaximum = 0 + binding.barchart.barData.getGroupWidth(
-                groupSpace,
-                barSpace
-            ) * groupCount
-
-            binding.barchart.groupBars(0f, groupSpace, barSpace)
-            xAxis.setCenterAxisLabels(true)
-
-            binding.barchart.invalidate()
+            }
+            override fun onTabReselected(tab: TabLayout.Tab) {
+            }
         })
+
 
         return binding.root
     }
