@@ -44,7 +44,7 @@ class MyDataFragment : Fragment() {
         binding.tabLayout!!.addTab( binding.tabLayout!!.newTab())
         binding.tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
-        val adapter = MyAdapter(this, requireFragmentManager(),  binding.tabLayout!!.tabCount)
+        val adapter = MyAdapter(this, childFragmentManager,  binding.tabLayout!!.tabCount)
         binding.pager!!.adapter = adapter
 
         binding.pager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout))

@@ -2,6 +2,7 @@ package com.example.arithmeticstresstest.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +46,7 @@ class ProfileFragment : Fragment() {
         profileViewModel.profileData?.observe(viewLifecycleOwner, Observer {
             binding.editTextName.setText(it.name)
             binding.editTestLastName.setText(it.lastName)
-            binding.editTextDateOfBirth.setText(it.dateOfBirth.toString())
+            binding.editTextDateOfBirth.setText( DateFormat.format("yyyy-MM-dd", it.dateOfBirth).toString())
             binding.editTextTypeOfDiabetes.setText(it.typeOfDiabetes)
             binding.editTextWeight.setText(it.weight.toString())
         })
@@ -69,7 +70,7 @@ class ProfileFragment : Fragment() {
         profileViewModel.saveProfileData(mAuth!!.currentUser.uid, profileData)
         openHomeActivity()
     }
-    
+
     private fun openHomeActivity() {
         val intent = Intent(activity, HomeActivity::class.java)
         startActivity(intent)

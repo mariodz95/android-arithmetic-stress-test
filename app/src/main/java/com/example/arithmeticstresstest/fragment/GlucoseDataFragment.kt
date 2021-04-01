@@ -1,8 +1,7 @@
 package com.example.arithmeticstresstest.fragment
 
-import android.icu.text.DateFormat.getDateTimeInstance
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import org.koin.android.ext.android.inject
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import android.text.format.DateFormat
-import java.text.DateFormat.getDateTimeInstance
 
 
 class GlucoseDataFragment: Fragment() {
@@ -58,23 +56,24 @@ class GlucoseDataFragment: Fragment() {
         dataViewModel.getFilteredGlucoseData(mAuth?.currentUser?.uid, startDate!!, endDate!!)
 
         dataViewModel.filteredGlucoseLevels?.observe(viewLifecycleOwner, Observer {
-            Log.v("sada", "ttt $it")
             val glucoseLevels = ArrayList<Float>()
             val glucoseBeforeType = ArrayList<Float>()
             val glucoseAfterType = ArrayList<Float>()
 
             val date = ArrayList<String>()
+            val days = ArrayList<String>()
 
             val entries: ArrayList<Entry> = ArrayList()
 
             val grouped =
-                    it.groupBy {  DateFormat.format("dd", it.date) }.mapValues {
+                    it.groupBy {  DateFormat.format("E", it.date) }.mapValues {
                         calculateAverage(
                                 it.value.map { it.glucoseLevel })
                     }
 
             var j: Int = 0
             for(data in grouped){
+                days.add(data.key.toString())
                 entries.add(Entry(j.toFloat(), data.value))
                 j++
             }
@@ -87,16 +86,6 @@ class GlucoseDataFragment: Fragment() {
                 } else {
                     glucoseAfterType.add(data.glucoseLevel!!.toFloat())
                 }
-        /*        val dateData =
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
-                                data.date
-                        )*/
-/*
-                date.add(dateData)
-*/
-
-         /*       entries.add(Entry(i.toFloat(), data.glucoseLevel?.toFloat()!!))
-                i++*/
             }
 
             maxGlucose = it.maxByOrNull { it.glucoseLevel!! }?.glucoseLevel
@@ -109,7 +98,7 @@ class GlucoseDataFragment: Fragment() {
             df.roundingMode = RoundingMode.CEILING
 
             avgGlucose = calculateAverage(glucoseLevels)
-            binding.txtAvgValue.text = "Average: ${df.format(avgGlucose)} mmol"
+            binding.txtAvgValue.text = "Avg: ${df.format(avgGlucose)} mmol"
 
             binding.txtMaxValueBefore.text = "Max: ${glucoseBeforeType.maxOrNull()} mmol"
             binding.txtMinGlucoseBefore.text = "Min: ${glucoseBeforeType.minOrNull()} mmol"
@@ -120,12 +109,14 @@ class GlucoseDataFragment: Fragment() {
             binding.txtAvgAfter.text = "Avg: ${df.format(calculateAverage(glucoseBeforeType))} mmol"
 
             val lineDataSet: LineDataSet = LineDataSet(entries, "Glucose level")
-
-            val weekdays = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun") // Your List / array with String Values For X-axis Labels
-
+            lineDataSet.color = Color.RED
+            lineDataSet.circleHoleColor =  Color.RED
+            lineDataSet.fillColor = Color.RED
+            lineDataSet.setCircleColor(Color.RED)
+            lineDataSet.circleSize = 5f
 
             val xAxis: XAxis = binding.lineChart.xAxis
-            xAxis.valueFormatter = IndexAxisValueFormatter(weekdays)
+            xAxis.valueFormatter = IndexAxisValueFormatter(days)
             binding.lineChart.axisLeft.axisMinimum = 0F
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 1F

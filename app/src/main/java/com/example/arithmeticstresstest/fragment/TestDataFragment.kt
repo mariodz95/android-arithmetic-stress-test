@@ -67,11 +67,11 @@ class TestDataFragment : Fragment() {
                 val barEntryAfter = BarEntry((i).toFloat(), glucoseAfter)
                 entriesAfterTest.add(barEntryAfter)
 
-                val dateData =
-                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
+                val dateData =   android.text.format.DateFormat.format("E HH:mm:ss", item.insertedDate)
+                /*DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
                                 item.insertedDate
-                        )
-                date.add(dateData)
+                        )*/
+                date.add(dateData.toString())
 
                 i++
             }
@@ -92,24 +92,24 @@ class TestDataFragment : Fragment() {
             xAxis.valueFormatter = IndexAxisValueFormatter(date)
             binding.barchart.axisLeft.axisMinimum = 0F
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.granularity = 0.5F
+            xAxis.granularity = 1F
             xAxis.isGranularityEnabled = true
-            xAxis.labelRotationAngle = 45f
+            xAxis.setCenterAxisLabels(true)
 
             val barSpace = 0.02f
-            val groupSpace = 0.3f
+            val groupSpace = 0.4f
             val groupCount = date.size
+            data.barWidth = 0.3f
 
-            data.barWidth = 0.15f
+
+            binding.barchart.axisRight.isEnabled = false
+
             binding.barchart.xAxis.axisMinimum = 0f
             binding.barchart.xAxis.axisMaximum = 0 + binding.barchart.barData.getGroupWidth(
                     groupSpace,
                     barSpace
             ) * groupCount
-
             binding.barchart.groupBars(0f, groupSpace, barSpace)
-            xAxis.setCenterAxisLabels(true)
-
             binding.barchart.invalidate()
         })
 

@@ -20,6 +20,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
         android:text="Max glucose: "
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Max glucose: "
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/txtAvgValue"
         app:layout_constraintHorizontal_bias="0.41"
         app:layout_constraintStart_toEndOf="@+id/txtMaxGlucose"
@@ -41,6 +43,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="10dp"
         android:text="Avg value: "
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
@@ -49,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:textStyle="bold"
         android:text="Before meal: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +63,7 @@
         android:id="@+id/txtMaxValueBefore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
         android:text="Max glucose: "
@@ -69,6 +74,7 @@
         android:id="@+id/txtMinGlucoseBefore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:text="Min glucose: "
         app:layout_constraintEnd_toStartOf="@+id/txtAvgValueBefore"
@@ -80,6 +86,7 @@
         android:id="@+id/txtAvgValueBefore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:layout_marginRight="10dp"
         android:text="Min glucose: "
@@ -90,6 +97,7 @@
         android:id="@+id/txtAfterMeal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:text="After meal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,6 +109,7 @@
         android:id="@+id/txtMaxValueAfter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
         android:text="After meal"
@@ -111,6 +120,7 @@
         android:id="@+id/txtMinAfter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:text="Min value: "
         app:layout_constraintEnd_toStartOf="@+id/txtAvgAfter"
@@ -122,11 +132,11 @@
         android:id="@+id/txtAvgAfter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:layout_marginTop="30dp"
         android:layout_marginRight="10dp"
         android:text="Average value: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtAfterMeal" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
