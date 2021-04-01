@@ -26,7 +26,6 @@
         app:layout_constraintStart_toEndOf="@+id/txtGlucose"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/txtSmartDevice"
         android:layout_width="wrap_content"
@@ -50,10 +49,11 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
-        android:layout_width="418dp"
+        android:layout_width="match_parent"
         android:layout_height="594dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSmartDevice"
         app:layout_constraintVertical_bias="1.0">

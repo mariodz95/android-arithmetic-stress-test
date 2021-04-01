@@ -15,7 +15,9 @@ import java.util.*
 
 class FirebaseRepository {
     var testData: MutableLiveData<List<TestData>> = MutableLiveData<List<TestData>>()
-    var profileData: MutableLiveData<List<ProfileData>> = MutableLiveData<List<ProfileData>>()
+    var profileData: MutableLiveData<ProfileData>?= MutableLiveData<ProfileData>()
+    var glucoseLevels: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
+    var filteredGlucoseData: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
 
     fun insertTestData(testData: TestData, uid: String?){
         val db = Firebase.firestore
@@ -42,24 +44,64 @@ class FirebaseRepository {
         return  testData
     }
 
-    fun getProfileData(userId: String?) : MutableLiveData<List<ProfileData>>?
+    fun getProfileData(userId: String?) : MutableLiveData<ProfileData>?
     {
         val db = Firebase.firestore
         val data = mutableListOf<ProfileData>()
 
-        db.collection("personalInformation").document(userId!!).collection("information")
+        val docRef = db.collection("personalInformation").document(userId!!)
+        docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val profile = document.toObject<ProfileData>()
+                        profileData!!.postValue( profile)
+
+                    } else {
+                    }
+                }
+                .addOnFailureListener { exception ->
+                }
+        return  profileData
+    }
+
+    fun getGlucoseLevelData(userId: String?): MutableLiveData<List<GlucoseLevel>>?{
+        val db = Firebase.firestore
+        val data = mutableListOf<GlucoseLevel>()
+
+        db.collection("glucoseLevels").document(userId!!).collection("levels")
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    val profileData = document.toObject<ProfileData>()
-                    data.add(profileData)
+                    val glucoseLevel = document.toObject<GlucoseLevel>()
+                    data.add(glucoseLevel)
                 }
-                profileData.postValue(data);
+                glucoseLevels.postValue(data);
             }
             .addOnFailureListener { exception ->
                 Log.w("sada", "Error getting documents: ", exception)
             }
-        return  profileData
+        return  glucoseLevels
+    }
+
+    fun getFilteredGlucoseData(userId: String?, startDate: Date, endDate: Date ): MutableLiveData<List<GlucoseLevel>>?{
+        val db = Firebase.firestore
+        val data = mutableListOf<GlucoseLevel>()
+
+        db.collection("glucoseLevels").document(userId!!).collection("levels")
+            .whereLessThanOrEqualTo("date", endDate)
+                .whereGreaterThanOrEqualTo("date", startDate)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val glucoseLevel = document.toObject<GlucoseLevel>()
+                    data.add(glucoseLevel)
+                }
+                glucoseLevels.postValue(data)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("sada", "Error getting documents: ", exception)
+            }
+        return  glucoseLevels
     }
 
     fun insertGlucoseLevel(userId: String?, glucoseLevel: GlucoseLevel){
@@ -70,5 +112,10 @@ class FirebaseRepository {
     fun insertSmartDeviceData(userId: String?, smartDevice: SmartDevice){
         val db = Firebase.firestore
         db.collection("smartDevice").document(userId!!).collection("data").add(smartDevice)
+    }
+
+    fun saveProfileData(userId: String?, profileData: ProfileData){
+        val db = Firebase.firestore
+        db.collection("personalInformation").document(userId!!).set(profileData)
     }
 }

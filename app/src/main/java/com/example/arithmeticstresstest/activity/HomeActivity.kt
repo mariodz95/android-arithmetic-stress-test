@@ -82,7 +82,6 @@ class HomeActivity : AppCompatActivity(), Toolbar.OnMenuItemClickListener {
         return false
     }
 
-
     private fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)

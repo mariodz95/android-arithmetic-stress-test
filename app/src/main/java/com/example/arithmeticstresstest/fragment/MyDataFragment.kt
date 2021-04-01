@@ -1,33 +1,20 @@
 package com.example.arithmeticstresstest.fragment
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.activity.GlucoseFormActivity
-import com.example.arithmeticstresstest.activity.ResultActivity
-import com.example.arithmeticstresstest.activity.SignInActivity
 import com.example.arithmeticstresstest.activity.SmartDeviceFormActivity
 import com.example.arithmeticstresstest.adapter.MyAdapter
 import com.example.arithmeticstresstest.databinding.MyDataBinding
 import com.example.arithmeticstresstest.model.DataViewModel
-import com.example.arithmeticstresstest.model.DataViewModelFactory
 import com.example.arithmeticstresstest.repository.FirebaseRepository
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
-import java.text.DateFormat
-
 
 class MyDataFragment : Fragment() {
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.arithmeticstresstest.R
 import com.example.arithmeticstresstest.databinding.FragmentTestDataBinding
 import com.example.arithmeticstresstest.model.DataViewModel
 import com.example.arithmeticstresstest.model.DataViewModelFactory
@@ -37,6 +36,7 @@ class TestDataFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTestDataBinding.inflate(inflater, container, false)
+
 
         var factory = DataViewModelFactory(repository)
         dataViewModel = ViewModelProvider(this, factory)[DataViewModel::class.java]
@@ -68,17 +68,17 @@ class TestDataFragment : Fragment() {
                 entriesAfterTest.add(barEntryAfter)
 
                 val dateData =
-                    DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
-                        item.insertedDate
-                    )
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
+                                item.insertedDate
+                        )
                 date.add(dateData)
 
                 i++
             }
 
             val barDataSetBeforeTest = BarDataSet(
-                entriesBeforeTest,
-                "Glucose levelbefore test"
+                    entriesBeforeTest,
+                    "Glucose levelbefore test"
             )
             barDataSetBeforeTest.color = Color.BLUE
 
@@ -103,8 +103,8 @@ class TestDataFragment : Fragment() {
             data.barWidth = 0.15f
             binding.barchart.xAxis.axisMinimum = 0f
             binding.barchart.xAxis.axisMaximum = 0 + binding.barchart.barData.getGroupWidth(
-                groupSpace,
-                barSpace
+                    groupSpace,
+                    barSpace
             ) * groupCount
 
             binding.barchart.groupBars(0f, groupSpace, barSpace)
@@ -115,4 +115,5 @@ class TestDataFragment : Fragment() {
 
         return binding.root
     }
-}// Required empty public constructor
+
+}
