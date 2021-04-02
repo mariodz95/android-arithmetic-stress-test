@@ -16,6 +16,10 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_baseline_account_box_24"
             android:title="@string/my_profile" />
+        <item
+            android:id="@+id/nav_results"
+            android:icon="@drawable/ic_baseline_analytics_24"
+            android:title="@string/test_result" />
     </group>
 
     <item

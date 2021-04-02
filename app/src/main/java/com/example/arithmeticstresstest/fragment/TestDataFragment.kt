@@ -19,7 +19,6 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
-import java.text.DateFormat
 
 class TestDataFragment : Fragment() {
 

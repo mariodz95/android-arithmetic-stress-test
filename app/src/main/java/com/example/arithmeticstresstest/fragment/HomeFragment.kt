@@ -4,15 +4,23 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.R
 import com.example.arithmeticstresstest.activity.InsertDataActivity
 import com.example.arithmeticstresstest.activity.ResultActivity
 import com.example.arithmeticstresstest.databinding.FragmentHomeBinding
+import com.example.arithmeticstresstest.model.DataViewModel
+import com.example.arithmeticstresstest.model.DataViewModelFactory
+import com.example.arithmeticstresstest.model.StressTestResult
+import com.example.arithmeticstresstest.repository.FirebaseRepository
+import com.google.firebase.auth.FirebaseAuth
+import org.koin.android.ext.android.inject
 import java.util.*
 
 
@@ -38,12 +46,22 @@ class HomeFragment : Fragment() {
     var leftNumber: Int = (100..1000).random()
     var rightNumber: Int = (100..1000).random()
 
+    private val repository : FirebaseRepository by inject()
+    private lateinit var dataViewModel: DataViewModel
+
+    private var mAuth: FirebaseAuth? = null
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        var factory = DataViewModelFactory(repository)
+        dataViewModel = ViewModelProvider(this, factory)[DataViewModel::class.java]
+
+        mAuth = FirebaseAuth.getInstance()
 
         binding.startTest.setOnClickListener {
             startTestTimer()
@@ -93,15 +111,15 @@ class HomeFragment : Fragment() {
 
     private fun startTestTimer() {
         val prefs = this.activity?.getSharedPreferences(
-            "DURATION_TIME",
-            AppCompatActivity.MODE_PRIVATE
+                "DURATION_TIME",
+                AppCompatActivity.MODE_PRIVATE
         )
         timeLeftInMillis = prefs?.getLong("duration", 180000)!!
         timeLeftInMillis = 20000
 
         val prefsNumberTime = this.activity?.getSharedPreferences(
-            "NUMBER_RESET_TIME",
-            AppCompatActivity.MODE_PRIVATE
+                "NUMBER_RESET_TIME",
+                AppCompatActivity.MODE_PRIVATE
         )
         timeLeftInMillisForNumber =
             prefsNumberTime?.getLong("numberResetTime", 7000)!!
@@ -115,6 +133,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFinish() {
+                val currentTime = Calendar.getInstance().time
+                val stressTestResult = StressTestResult(mAuth!!.currentUser.email, points, numberOfCalculations, currentTime)
+                dataViewModel.saveTestResult(stressTestResult)
                 openResultActivity()
             }
         }.start()
@@ -132,10 +153,10 @@ class HomeFragment : Fragment() {
         val minutes : Int = (timeLeftInMillis.toInt() / 1000) / 60
         val seconds : Int = (timeLeftInMillis.toInt() / 1000) % 60
         val timeLeftFormatted : String = String.format(
-            Locale.getDefault(),
-            "%02d:%02d",
-            minutes,
-            seconds
+                Locale.getDefault(),
+                "%02d:%02d",
+                minutes,
+                seconds
         )
         binding.txtTimer.text = timeLeftFormatted
     }
@@ -144,10 +165,10 @@ class HomeFragment : Fragment() {
         val minutes : Int = (timeLeftInMillisForNumber.toInt() / 1000) / 60
         val seconds : Int = (timeLeftInMillisForNumber.toInt() / 1000) % 60
         val timeLeftFormatted : String = String.format(
-            Locale.getDefault(),
-            "%02d:%02d",
-            minutes,
-            seconds
+                Locale.getDefault(),
+                "%02d:%02d",
+                minutes,
+                seconds
         )
         binding.txtSmallTimer.text = timeLeftFormatted
     }
@@ -204,6 +225,11 @@ class HomeFragment : Fragment() {
 
         generateNumberCountDownTime?.cancel()
         generateNumberCountDownTime = null
+    }
+
+    override fun onStop() {
+        stopTimers()
+        super.onStop()
     }
 
     private fun openResultActivity() {

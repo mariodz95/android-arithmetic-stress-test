@@ -9,7 +9,12 @@ class DataViewModel(private val repository: FirebaseRepository): ViewModel(){
     var data : MutableLiveData<List<TestData>>? = null
     var glucoseLevels : MutableLiveData<List<GlucoseLevel>>? = null
     var filteredGlucoseLevels : MutableLiveData<List<GlucoseLevel>>? = null
+    var testResults: MutableLiveData<List<StressTestResult>>? = null
 
+    fun getStressTestResults() :MutableLiveData<List<StressTestResult>>? {
+        testResults = repository.getStressTestResults()
+        return testResults
+    }
 
     fun insertTestData(testData: TestData, uid: String?){
         repository.insertTestData(testData, uid)
@@ -21,6 +26,10 @@ class DataViewModel(private val repository: FirebaseRepository): ViewModel(){
 
     fun getGlucoseLevels(userId: String?){
         glucoseLevels = repository.getGlucoseLevelData(userId)
+    }
+
+    fun saveTestResult(stressTestResult: StressTestResult){
+        repository.saveTestResult(stressTestResult)
     }
 
     fun getFilteredGlucoseData(userId: String?, startDate: Date, endDate: Date ){

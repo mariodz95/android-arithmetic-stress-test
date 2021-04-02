@@ -2,11 +2,7 @@ package com.example.arithmeticstresstest.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.arithmeticstresstest.model.GlucoseLevel
-import com.example.arithmeticstresstest.model.ProfileData
-import com.example.arithmeticstresstest.model.SmartDevice
-import com.example.arithmeticstresstest.model.TestData
-import com.google.firebase.Timestamp
+import com.example.arithmeticstresstest.model.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -18,6 +14,27 @@ class FirebaseRepository {
     var profileData: MutableLiveData<ProfileData>?= MutableLiveData<ProfileData>()
     var glucoseLevels: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
     var filteredGlucoseData: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
+    var testResults: MutableLiveData<List<StressTestResult>> = MutableLiveData<List<StressTestResult>>()
+
+
+    fun getStressTestResults() :MutableLiveData<List<StressTestResult>>?{
+        val db = Firebase.firestore
+        val data = mutableListOf<StressTestResult>()
+
+        db.collection("stressTestResults")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val stressTestResult = document.toObject<StressTestResult>()
+                        data.add(stressTestResult)
+                    }
+                    testResults.postValue(data);
+                }
+                .addOnFailureListener { exception ->
+                }
+        return  testResults
+    }
+
 
     fun insertTestData(testData: TestData, uid: String?){
         val db = Firebase.firestore
@@ -39,7 +56,6 @@ class FirebaseRepository {
                 testData.postValue(sortedData);
             }
             .addOnFailureListener { exception ->
-                Log.w("sada", "Error getting documents: ", exception)
             }
         return  testData
     }
@@ -47,7 +63,6 @@ class FirebaseRepository {
     fun getProfileData(userId: String?) : MutableLiveData<ProfileData>?
     {
         val db = Firebase.firestore
-        val data = mutableListOf<ProfileData>()
 
         val docRef = db.collection("personalInformation").document(userId!!)
         docRef.get()
@@ -78,7 +93,6 @@ class FirebaseRepository {
                 glucoseLevels.postValue(data);
             }
             .addOnFailureListener { exception ->
-                Log.w("sada", "Error getting documents: ", exception)
             }
         return  glucoseLevels
     }
@@ -117,5 +131,10 @@ class FirebaseRepository {
     fun saveProfileData(userId: String?, profileData: ProfileData){
         val db = Firebase.firestore
         db.collection("personalInformation").document(userId!!).set(profileData)
+    }
+
+    fun saveTestResult(stressTestResult: StressTestResult){
+        val db = Firebase.firestore
+        db.collection("stressTestResults").add(stressTestResult)
     }
 }

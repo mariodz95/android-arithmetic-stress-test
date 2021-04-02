@@ -22,4 +22,10 @@
         android:name="com.example.arithmeticstresstest.fragment.ProfileFragment"
         android:label="@string/my_profile"
         tools:layout="@layout/fragment_my_profile" />
+
+    <fragment
+        android:id="@+id/nav_results"
+        android:name="com.example.arithmeticstresstest.fragment.StressTestResults"
+        android:label="@string/test_result"
+        tools:layout="@layout/fragment_stress_test_results" />
 </navigation>
