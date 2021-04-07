@@ -4,7 +4,7 @@ import java.util.*
 
 class DateHelper {
 
-    fun getWeekStartDate(): Date? {
+    fun getWeekStartDate(): Calendar? {
         val calendar = Calendar.getInstance()
         while (calendar[Calendar.DAY_OF_WEEK] !== Calendar.MONDAY) {
             calendar.add(Calendar.DATE, -1)
@@ -12,10 +12,10 @@ class DateHelper {
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
         }
-        return calendar.time
+        return calendar
     }
 
-    fun getWeekEndDate(): Date? {
+    fun getWeekEndDate(): Calendar? {
         val calendar = Calendar.getInstance()
         while (calendar[Calendar.DAY_OF_WEEK] !== Calendar.MONDAY) {
             calendar.add(Calendar.DATE, 1)
@@ -24,6 +24,6 @@ class DateHelper {
             calendar.set(Calendar.SECOND, 59);
         }
         calendar.add(Calendar.DATE, -1)
-        return calendar.time
+        return calendar
     }
 }

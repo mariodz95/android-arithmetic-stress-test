@@ -37,10 +37,7 @@ class StressTestResults : Fragment() {
 
         dataViewModel.getStressTestResults()
         dataViewModel.testResults?.observe(viewLifecycleOwner, Observer {
-            Log.v("sada", "It it $it")
-
-            binding.rvResults.adapter =  TestRecyclerViewAdapter(it)
-
+            binding.rvResults.adapter =  TestRecyclerViewAdapter(it.sortedByDescending { it.dateInserted })
         })
 
         return binding.root

@@ -2,6 +2,7 @@ package com.example.arithmeticstresstest.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import android.text.format.DateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class GlucoseDataFragment: Fragment() {
@@ -49,11 +51,11 @@ class GlucoseDataFragment: Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        val dateHelper = DateHelper()
-        val startDate = dateHelper.getWeekStartDate()
-        val endDate = dateHelper.getWeekEndDate()
+        val fromDate = (parentFragment as MyDataFragment).getFromDate()
+        val toDate = (parentFragment as MyDataFragment).getToDate()
 
-        dataViewModel.getFilteredGlucoseData(mAuth?.currentUser?.uid, startDate!!, endDate!!)
+
+        dataViewModel.getFilteredGlucoseData(mAuth?.currentUser?.uid, fromDate!!, toDate!!)
 
         dataViewModel.filteredGlucoseLevels?.observe(viewLifecycleOwner, Observer {
             val glucoseLevels = ArrayList<Float>()
@@ -66,13 +68,13 @@ class GlucoseDataFragment: Fragment() {
             val entries: ArrayList<Entry> = ArrayList()
 
             val grouped =
-                    it.groupBy {  DateFormat.format("E", it.date) }.mapValues {
+                    it.groupBy { DateFormat.format("E", it.date) }.mapValues {
                         calculateAverage(
                                 it.value.map { it.glucoseLevel })
                     }
 
             var j: Int = 0
-            for(data in grouped){
+            for (data in grouped) {
                 days.add(data.key.toString())
                 entries.add(Entry(j.toFloat(), data.value))
                 j++
@@ -110,7 +112,7 @@ class GlucoseDataFragment: Fragment() {
 
             val lineDataSet: LineDataSet = LineDataSet(entries, "Glucose level")
             lineDataSet.color = Color.RED
-            lineDataSet.circleHoleColor =  Color.RED
+            lineDataSet.circleHoleColor = Color.RED
             lineDataSet.fillColor = Color.RED
             lineDataSet.setCircleColor(Color.RED)
             lineDataSet.circleSize = 5f

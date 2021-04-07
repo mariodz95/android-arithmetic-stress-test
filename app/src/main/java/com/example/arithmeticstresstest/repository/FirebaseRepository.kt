@@ -13,8 +13,8 @@ class FirebaseRepository {
     var testData: MutableLiveData<List<TestData>> = MutableLiveData<List<TestData>>()
     var profileData: MutableLiveData<ProfileData>?= MutableLiveData<ProfileData>()
     var glucoseLevels: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
-    var filteredGlucoseData: MutableLiveData<List<GlucoseLevel>> = MutableLiveData<List<GlucoseLevel>>()
     var testResults: MutableLiveData<List<StressTestResult>> = MutableLiveData<List<StressTestResult>>()
+    var smartDeviceData: MutableLiveData<List<SmartDevice>> = MutableLiveData<List<SmartDevice>>()
 
 
     fun getStressTestResults() :MutableLiveData<List<StressTestResult>>?{
@@ -116,6 +116,27 @@ class FirebaseRepository {
                 Log.w("sada", "Error getting documents: ", exception)
             }
         return  glucoseLevels
+    }
+
+    fun getSmartDeviceData(userId: String?, startDate: Date, endDate: Date ): MutableLiveData<List<SmartDevice>>?{
+        val db = Firebase.firestore
+        val data = mutableListOf<SmartDevice>()
+
+        db.collection("smartDevice").document(userId!!).collection("data")
+                .whereLessThanOrEqualTo("dateTime", endDate)
+                .whereGreaterThanOrEqualTo("dateTime", startDate)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val smartDevice = document.toObject<SmartDevice>()
+                        data.add(smartDevice)
+                    }
+                    smartDeviceData.postValue(data)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("sada", "Error getting documents: ", exception)
+                }
+        return  smartDeviceData
     }
 
     fun insertGlucoseLevel(userId: String?, glucoseLevel: GlucoseLevel){

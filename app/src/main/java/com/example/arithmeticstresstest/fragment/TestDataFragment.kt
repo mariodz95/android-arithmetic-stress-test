@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.arithmeticstresstest.databinding.FragmentTestDataBinding
+import com.example.arithmeticstresstest.helper.DateHelper
 import com.example.arithmeticstresstest.model.DataViewModel
 import com.example.arithmeticstresstest.model.DataViewModelFactory
 import com.example.arithmeticstresstest.repository.FirebaseRepository
@@ -25,7 +26,6 @@ class TestDataFragment : Fragment() {
     private val repository : FirebaseRepository by inject()
     private lateinit var dataViewModel: DataViewModel
     private lateinit var binding: FragmentTestDataBinding
-
     private var mAuth: FirebaseAuth? = null
 
     override fun onCreateView(
@@ -35,7 +35,6 @@ class TestDataFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTestDataBinding.inflate(inflater, container, false)
-
 
         var factory = DataViewModelFactory(repository)
         dataViewModel = ViewModelProvider(this, factory)[DataViewModel::class.java]
@@ -67,9 +66,6 @@ class TestDataFragment : Fragment() {
                 entriesAfterTest.add(barEntryAfter)
 
                 val dateData =   android.text.format.DateFormat.format("E HH:mm:ss", item.insertedDate)
-                /*DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(
-                                item.insertedDate
-                        )*/
                 date.add(dateData.toString())
 
                 i++

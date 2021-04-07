@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ProfileFragment">
 
-
     <EditText
         android:id="@+id/editTextDateOfBirth"
-        android:layout_width="500px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:inputType="date"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="Pick date:"
+        android:inputType="numberDecimal"
         app:layout_constraintStart_toEndOf="@+id/txtBirthOfDate"
         app:layout_constraintTop_toBottomOf="@+id/editTextWeight" />
 
@@ -91,10 +93,12 @@
         android:id="@+id/txtBirthOfDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_marginTop="30dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="Date of birth: "
+        android:hint="Pick date:"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtWeight" />
 

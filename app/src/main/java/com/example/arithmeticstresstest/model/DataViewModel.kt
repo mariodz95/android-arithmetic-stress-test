@@ -1,8 +1,12 @@
 package com.example.arithmeticstresstest.model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.arithmeticstresstest.repository.FirebaseRepository
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class DataViewModel(private val repository: FirebaseRepository): ViewModel(){
@@ -10,10 +14,15 @@ class DataViewModel(private val repository: FirebaseRepository): ViewModel(){
     var glucoseLevels : MutableLiveData<List<GlucoseLevel>>? = null
     var filteredGlucoseLevels : MutableLiveData<List<GlucoseLevel>>? = null
     var testResults: MutableLiveData<List<StressTestResult>>? = null
+    var smartDeviceData: MutableLiveData<List<SmartDevice>>? = null
 
     fun getStressTestResults() :MutableLiveData<List<StressTestResult>>? {
         testResults = repository.getStressTestResults()
         return testResults
+    }
+
+    fun getSmartDeviceData(userId: String?, startDate: Date, endDate: Date ){
+        smartDeviceData = repository.getSmartDeviceData(userId, startDate, endDate)
     }
 
     fun insertTestData(testData: TestData, uid: String?){
